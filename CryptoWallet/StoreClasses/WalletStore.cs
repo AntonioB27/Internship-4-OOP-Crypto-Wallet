@@ -20,5 +20,16 @@ namespace CryptoWallet
                 Console.WriteLine(wallet.Adress);
             }
         }
+
+        public Wallet ContainsAdress(string adress)
+        {
+            foreach (var wallet in ListOfWallets)
+            {
+                if (wallet.Adress.Equals(adress))
+                    return wallet;
+            }
+
+            return null;
+        }
     }
 }

@@ -42,7 +42,10 @@ namespace CryptoWallet
             _assetStore.Add(_ltc);
             _assetStore.Add(_trx);
 
-
+            decimal btcTotal = 0;
+            decimal ethTotal = 0;
+            decimal solTotal = 0;
+            
             Console.Clear();
             Console.WriteLine("Crypto-DUMP\n\n" +
                               "Welcome to your Crypto fund managing application.\n" +
@@ -61,7 +64,7 @@ namespace CryptoWallet
             {
                 Console.Clear();
                 Console.WriteLine("1-Create a wallet");
-                Console.WriteLine("Access wallets");
+                Console.WriteLine("2-Access wallets");
                 Int32.TryParse(Console.ReadLine(), out userInput);
                 switch (userInput)
                 {
@@ -80,7 +83,7 @@ namespace CryptoWallet
                                     Console.WriteLine("Bitcoin wallet created!");
                                 else
                                     Console.WriteLine("Wallet not created!");
-                                Thread.Sleep(2000);
+                                Thread.Sleep(1000);
                                 break;
                             case 2:
                                 Console.Clear();
@@ -88,7 +91,7 @@ namespace CryptoWallet
                                     Console.WriteLine("Ethereum wallet created!");
                                 else
                                     Console.WriteLine("Wallet not created!");
-                                Thread.Sleep(2000);
+                                Thread.Sleep(1000);
                                 break;
                             case 3:
                                 Console.Clear();
@@ -96,7 +99,7 @@ namespace CryptoWallet
                                     Console.WriteLine("Solana wallet created!");
                                 else
                                     Console.WriteLine("Wallet not created!");
-                                Thread.Sleep(2000);
+                                Thread.Sleep(1000);
                                 break;
                             case 4:
                                 break;
@@ -104,8 +107,54 @@ namespace CryptoWallet
                                 Console.WriteLine("Wrong input!!");
                                 break;
                         }
-
                         break;
+                    
+                        case 2:
+                            Console.Clear();
+                            Console.WriteLine("Your wallets: \n");
+                            foreach (var VARIABLE in _walletStore.ListOfWallets)
+                            {
+                                VARIABLE.ToString();
+                                if (VARIABLE.WalletType.Equals(Enums.WalletType.Bitcoin))
+                                {
+                                    Console.WriteLine($"Previous value: {btcTotal}");
+                                    btcTotal = VARIABLE.TotalValueOfAssets();
+                                }
+
+                                else if (VARIABLE.WalletType.Equals(Enums.WalletType.Ethereum))
+                                {
+                                    Console.WriteLine($"Previous value: {ethTotal}");
+                                    ethTotal = VARIABLE.TotalValueOfAssets();
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"Previous value: {solTotal}");
+                                    solTotal = VARIABLE.TotalValueOfAssets();
+                                }
+                            }
+
+                            Console.WriteLine("Please enter a adress of an wallet you want to enter: ");
+                            string accesingWalletAdress = Console.ReadLine();
+                            Console.Clear();
+                            Console.WriteLine("1-Portfolio");
+                            Int32.TryParse(Console.ReadLine(), out userInput);
+                            switch (userInput)
+                            {
+                                case 1:
+                                    Wallet currentWallet = _walletStore.ContainsAdress(accesingWalletAdress);
+                                    var total = currentWallet.TotalValueOfAssets();
+
+                                    Console.WriteLine($"Total value of all asstes: {total}");
+                                    Console.WriteLine("Fungible assets:");
+                                    int i = 0;
+                                    foreach (var fungible in currentWallet.FungibleBalance.Keys)
+                                    {
+                                        Console.WriteLine($"Adress: {fungible}\n" +
+                                                          $"Name: {_assetStore.ListOfAssets[i]}");
+                                    }
+                                    break;
+                            }
+                            break;
                 }
             } while (userInput != 0);
         }

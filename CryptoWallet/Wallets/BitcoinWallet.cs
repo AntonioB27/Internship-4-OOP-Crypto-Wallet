@@ -20,5 +20,23 @@ namespace CryptoWallet.Wallets
                     FungibleAdress.Add(VARIABLE.Adress);
             }
         }
+
+        public override decimal TotalValueOfAssets()
+        {
+            int total = 0;
+            foreach (var value in FungibleBalance.Values)
+            {
+                total += value;
+            }
+
+            return total;
+        }
+        
+        public override string ToString()
+        {
+            return ($"Type: {WalletType}\n" +
+                    $"Adress: {Adress}\n" +
+                    $"Value in USD {TotalValueOfAssets()}\n");
+        }
     }
 }
